@@ -1,6 +1,10 @@
 #include "main.h"
 #include "Robot/Motors.h"
 #include "Robot/functions.hpp"
+#include "Robot/Auton/All_Autons.hpp"
+#include "Robot/Global.h"
+
+
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -17,8 +21,30 @@
 
 void autonomous()
 {
-Timer Start;
-while(true){
-lcd::print(1,"Current time: %d\n",Start.getTime());
+  
+  switch(count)
+	{
+case 0 :
+RedFront();
+break;
+
+case 1 :
+BlueFront();
+break;
+
+case 2 :
+RedBack();
+break;
+
+case 3 :
+BlueBack();
+break;
+
+case 4 :
+break;
+
+default:
+count = 0;
+
 }
 }

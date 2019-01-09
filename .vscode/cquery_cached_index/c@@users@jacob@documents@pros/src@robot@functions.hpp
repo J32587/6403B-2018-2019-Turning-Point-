@@ -1,5 +1,4 @@
 #include "main.h"
-#include "Motors.h"
 
 extern float frontLeftDrive;
 extern float frontRightDrive;
@@ -7,17 +6,17 @@ extern float backLeftDrive;
 extern float backRightDrive;
 extern float Gyro;
 
-class Timer
-{
+class Timer {
 private:
 int lastTime = millis();
 
 public:
-
+int myTime;
+int currentTime;
   int getTime()
   {
-    int myTime = millis();
-    int currentTime = myTime - lastTime;
+    myTime = millis();
+    currentTime = myTime - lastTime;
     return currentTime;
   }
 

@@ -1,14 +1,94 @@
 #include "main.h"
 #include "Robot/Motors.h"
+#include "Robot/Global.h"
 
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+int middle = 0;
+
+void buttonAdd()
+{
+  static bool pressed = false;
+  pressed = !pressed;
+  if (pressed) count++;
+
+}
+
+void buttonSub()
+{
+  static bool pressed = false;
+  pressed = !pressed;
+  if (pressed) count--;
+}
+
+void buttonMid()
+{
+  static bool pressed = false;
+  pressed = !pressed;
+  if (pressed){
+  middle = 1;
+  delay(300);
+  middle =0;
+           }
+
+}
+
+
+//***************** Auton Selection Functions *****************//
+void selectAuton()
+{
+middle = 0;
+while(middle == 0)
+  {
+lcd::register_btn1_cb(buttonMid);
+  switch(count)
+   {
+case 0 :
+
+lcd::print(1,"Red Front");
+
+lcd::register_btn2_cb(buttonAdd);
+
+lcd::register_btn0_cb(buttonSub);
+
+break;
+case 1 :
+
+lcd::print(1,"Blue Front");
+
+lcd::register_btn2_cb(buttonAdd);
+
+lcd::register_btn0_cb(buttonSub);
+
+break;
+case 2:
+
+lcd::print(1,"Red Back");
+
+lcd::register_btn2_cb(buttonAdd);
+
+lcd::register_btn0_cb(buttonSub);
+
+break;
+case 3 :
+
+lcd::print(1,"Blue Back");
+
+lcd::register_btn2_cb(buttonAdd);
+
+lcd::register_btn0_cb(buttonSub);
+
+break;
+case 4 :
+lcd::print(1,"None");
+
+lcd::register_btn2_cb(buttonAdd);
+
+lcd::register_btn0_cb(buttonSub);
+
+break;
+default :
+count = 0;
+    }
+  }
 }
 
 /**
@@ -18,10 +98,10 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	lcd::initialize();
+  selectAuton();
 
-	pros::lcd::register_btn1_cb(on_center_button);
+
 }
 
 /**
