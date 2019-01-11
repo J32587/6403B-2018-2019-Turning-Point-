@@ -26,9 +26,102 @@ void updateData()
 
 void resetData()
 {
-RFDrive.set_zero_position(0);
-RFDrive.set_zero_position(0);
-myGyro.reset();
+	RFDrive.set_zero_position(0);
+  LFDrive.set_zero_position(0);
+  RBDrive.set_zero_position(0);
+  LBDrive.set_zero_position(0);
+  myGyro.reset();
+}
+
+
+//************ Auto DrawBack *************/
+
+bool reload = false;
+bool autoIntake = false;
+
+void task_drawBack(void*){
+
+  while(true){
+    if (Controller1.get_digital(DIGITAL_L2)){
+      int i = 0;
+
+      while(true){
+
+        Puncher.move(127);
+        Puncher.tare_position(); //this function set the absolute zero position of the motors
+				//to its current position
+
+        i++;
+        if (Puncher.get_current_draw() < 300 && i > 120)
+        break;
+
+        delay(2);
+      }
+
+      while (true){
+
+        Puncher.move(127);
+
+        if (fabs(Puncher.get_position()) > 825)
+        break;
+
+        delay(2);
+      }
+
+      Puncher.move(0);
+    }
+
+    //Dont wanna stress out the poor brain do we
+    delay(20);
+  }
+}
+
+void reloadPuncherAuton(void*){
+
+  while(true){
+
+    if (reload){
+
+      int i = 0;
+
+      if (autoIntake){
+        Intake.move(127);
+      }
+
+
+      while(true){
+
+        Puncher.move(127);
+        Puncher.tare_position();
+
+        if (Puncher.get_current_draw() < 300 && i > 120)
+        break;
+
+        i++;
+
+        delay(2);
+      }
+
+      while (true){
+
+        Puncher.move(127);
+
+        if (fabs(Puncher.get_position()) > 825)
+        break;
+
+        delay(2);
+      }
+
+      Puncher.move(0);
+
+      //Checks if the intake was running and turns it off
+      if (autoIntake){
+        Intake.move(0);
+      }
+
+      reload = false;
+}
+}
 }
 
 //****************** PID Functions *******************//
@@ -88,6 +181,7 @@ inline void updateDataP()
  backRightDrive = RBDrive.get_position();
  Gyro = myGyro.get_value();
 }
+
 Timer PID;
 void moveRobotPID (const string direction, float target, float waitTime, int maxPower){
 	PID.resetTimer();
@@ -133,7 +227,7 @@ void moveRobotPID (const string direction, float target, float waitTime, int max
 
 	//Check for axial movement
 	if (direction == "north" || direction == "south"){
-		//Infinate loop
+
 		while (true){
 			//Proportion control
 			error = inToTick(target) - (driveLeftPos() + driveRightPos());
@@ -250,7 +344,6 @@ void moveRobotPID (const string direction, float target, float waitTime, int max
 				break;
 			}
 
-			//Dont wanna over load the poor CPU now do we
 			delay(20);
 		}
 	}
@@ -321,7 +414,6 @@ void moveRobotPID (const string direction, float target, float waitTime, int max
 				break;
 			}
 
-			//Dont wanna over load the poor CPU now do we
 			delay(20);
 		}
 	}

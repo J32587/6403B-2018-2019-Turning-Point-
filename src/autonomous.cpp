@@ -2,8 +2,7 @@
 #include "Robot/Motors.h"
 #include "Robot/functions.hpp"
 #include "Robot/Auton/All_Autons.hpp"
-#include "Robot/Global.h"
-
+#include "Robot/Global.hpp"
 
 
 /**
@@ -21,7 +20,7 @@
 
 void autonomous()
 {
-  
+
   switch(count)
 	{
 case 0 :

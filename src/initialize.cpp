@@ -1,6 +1,6 @@
 #include "main.h"
 #include "Robot/Motors.h"
-#include "Robot/Global.h"
+#include "Robot/Global.hpp"
 
 int middle = 0;
 
@@ -43,7 +43,7 @@ lcd::register_btn1_cb(buttonMid);
    {
 case 0 :
 
-lcd::print(1,"Red Front");
+lcd::set_text(1,"Red Front");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -52,7 +52,7 @@ lcd::register_btn0_cb(buttonSub);
 break;
 case 1 :
 
-lcd::print(1,"Blue Front");
+lcd::set_text(1,"Blue Front");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -61,7 +61,7 @@ lcd::register_btn0_cb(buttonSub);
 break;
 case 2:
 
-lcd::print(1,"Red Back");
+lcd::set_text(1,"Red Back");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -70,7 +70,7 @@ lcd::register_btn0_cb(buttonSub);
 break;
 case 3 :
 
-lcd::print(1,"Blue Back");
+lcd::set_text(1,"Blue Back");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -78,7 +78,7 @@ lcd::register_btn0_cb(buttonSub);
 
 break;
 case 4 :
-lcd::print(1,"None");
+lcd::set_text(1,"None");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -88,6 +88,7 @@ break;
 default :
 count = 0;
     }
+		delay(200);
   }
 }
 
@@ -99,7 +100,7 @@ count = 0;
  */
 void initialize() {
 	lcd::initialize();
-  selectAuton();
+
 
 
 }
@@ -109,7 +110,10 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled()
+{
+selectAuton();
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -120,4 +124,7 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+
+}

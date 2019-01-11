@@ -15,6 +15,9 @@
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+Task reloadPuncherTask ();
+
 void opcontrol()
 {
 	while (true)
@@ -37,15 +40,15 @@ void opcontrol()
 			{
 			Y3 = Controller1.get_analog(ANALOG_LEFT_Y);
 		  }
-				LFDrive.move(Y3 + X4 + X1);
-				RFDrive.move(Y3 - X4 - X1);
-				LBDrive.move(Y3 - X4 + X1);
-				RBDrive.move(Y3 + X4 - X1);
+				LFDrive.move(Y3 + X1 + X4);
+				RFDrive.move(Y3 - X1 - X4);
+				LBDrive.move(Y3 - X1 + X4);
+				RBDrive.move(Y3 + X1 - X4);
 
-			if (Controller1.get_digital(DIGITAL_R1)){
+			if (Controller1.get_digital(E_CONTROLLER_DIGITAL_R1)){
 				Intake.move(90);
 			}
-			else if (Controller1.get_digital(DIGITAL_L1)){
+			else if (Controller1.get_digital(E_CONTROLLER_DIGITAL_L1)){
 				Intake.move(-90);
 			}
 			else {
