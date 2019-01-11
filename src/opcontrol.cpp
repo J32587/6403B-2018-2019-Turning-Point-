@@ -1,5 +1,6 @@
 #include "main.h"
 #include "Robot/Motors.h"
+#include "Robot/functions.hpp"
 
 
 /**
@@ -16,34 +17,36 @@
  * task, not resume it from where it left off.
  */
 
-Task reloadPuncherTask ();
-
 void opcontrol()
 {
-	while (true)
-	{
+
 	int X1 = 0;
 	int X4 = 0;
 	int Y3 = 0;
-	const int _deadzone = 16;
+ const	int _deadzone = 16;
 
+	while (true)
+	{
 			// Check deadzones for base control
 			if (abs(Controller1.get_analog(ANALOG_RIGHT_X)) > _deadzone)
 			{
 			X1 = Controller1.get_analog(ANALOG_RIGHT_X);
 		  }
+			else X1 = 0;
 			if (abs(Controller1.get_analog(ANALOG_LEFT_X)) > _deadzone)
 			{
 			X4 = Controller1.get_analog(ANALOG_LEFT_X);
 		  }
+			else X4 = 0;
 			if (abs(Controller1.get_analog(ANALOG_LEFT_Y)) > _deadzone)
 			{
 			Y3 = Controller1.get_analog(ANALOG_LEFT_Y);
 		  }
-				LFDrive.move(Y3 + X1 + X4);
-				RFDrive.move(Y3 - X1 - X4);
-				LBDrive.move(Y3 - X1 + X4);
-				RBDrive.move(Y3 + X1 - X4);
+			else Y3 = 0;
+				LFDrive.move(Y3 + X4 + X1);
+				RFDrive.move(Y3 - X4 - X1);
+				LBDrive.move(Y3 - X4 + X1);
+				RBDrive.move(Y3 + X4 - X1);
 
 			if (Controller1.get_digital(E_CONTROLLER_DIGITAL_R1)){
 				Intake.move(90);
@@ -54,6 +57,11 @@ void opcontrol()
 			else {
 				Intake.move(0);
 	}
+	if(Controller1.get_digital(E_CONTROLLER_DIGITAL_R2))
+	Lift.move(120);
+	else if(Controller1.get_digital(E_CONTROLLER_DIGITAL_L2))
+	Lift.move(-120);
+	else Lift.move(0);
 
 	}
 }

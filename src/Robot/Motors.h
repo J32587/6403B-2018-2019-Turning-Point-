@@ -3,11 +3,11 @@
 #ifndef MOTORS_H
 #define MOTORS_H
 
-#define leftFrontDrive_Port (15)
+#define leftFrontDrive_Port (12)
 #define rightFrontDrive_Port (1)
-#define leftBackDrive_Port (16)
-#define rightBackDrive_Port (17)
-#define puncher_Port (18)
+#define leftBackDrive_Port (14)
+#define rightBackDrive_Port (11)
+#define puncher_Port (10)
 #define lift_Port (7)
 #define intake_Port (2)
 #define angler_Port (6)
