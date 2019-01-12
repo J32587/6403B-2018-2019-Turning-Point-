@@ -15,14 +15,6 @@ RFDrive.move_voltage(mySpeedR);
 RBDrive.move_voltage(mySpeedR);
 	}
 
-void updateData()
-{
-  frontLeftDrive = LFDrive.get_position();
-  frontRightDrive = RFDrive.get_position();
-  backLeftDrive = LBDrive.get_position();
-  backRightDrive = RBDrive.get_position();
-  Gyro = myGyro.get_value();
-}
 
 void resetData()
 {
@@ -36,38 +28,53 @@ void resetData()
 
 //************ Auto DrawBack *************/
 
+
 bool reload = false;
 bool autoIntake = false;
-
-void task_drawBack(void*){
-
+//The main medthod for the auto reload control
+void reloadPuncher(void*){
+  //Start an infinate loop to check for new button press
   while(true){
-    if (Controller1.get_digital(DIGITAL_L2)){
+    //When butotn is pressed start the sequence
+    if (Controller1.get_digital(E_CONTROLLER_DIGITAL_Y)){
+      //Initialize iteration variable
       int i = 0;
 
+      //Runs the puncher until the current draw dips and
+      //until the 120th iteration to prevent the loop ending
+      //when the current draw is low due to motor starting to spin
       while(true){
-
+        //Moves puncher back and reset encoder position in
+        //preperation for next procedure
         Puncher.move(127);
-        Puncher.tare_position(); //this function set the absolute zero position of the motors
-				//to its current position
+        Puncher.tare_position();
 
+        //Adds one to iteration counter
         i++;
+
+        //Checks if needs to break out of loop
         if (Puncher.get_current_draw() < 300 && i > 120)
         break;
 
+        ///Dont wanna stress out the poor brain dont we
         delay(2);
       }
 
+      //Cock backs the puncher until it is about to shoot
+      //again, so the puncher is ready to fire instantly
       while (true){
-
+        //Moves puncher back
         Puncher.move(127);
 
+        //Checks if needs to break out of loop
         if (fabs(Puncher.get_position()) > 825)
         break;
 
+        //Dont wanna stress out the poor brain dont we
         delay(2);
       }
-
+      //Stops puncher from moving once it is out of the
+      //auto reload procedure
       Puncher.move(0);
     }
 
@@ -76,53 +83,7 @@ void task_drawBack(void*){
   }
 }
 
-void reloadPuncherAuton(void*){
 
-  while(true){
-
-    if (reload){
-
-      int i = 0;
-
-      if (autoIntake){
-        Intake.move(127);
-      }
-
-
-      while(true){
-
-        Puncher.move(127);
-        Puncher.tare_position();
-
-        if (Puncher.get_current_draw() < 300 && i > 120)
-        break;
-
-        i++;
-
-        delay(2);
-      }
-
-      while (true){
-
-        Puncher.move(127);
-
-        if (fabs(Puncher.get_position()) > 825)
-        break;
-
-        delay(2);
-      }
-
-      Puncher.move(0);
-
-      //Checks if the intake was running and turns it off
-      if (autoIntake){
-        Intake.move(0);
-      }
-
-      reload = false;
-}
-}
-}
 
 //****************** PID Functions *******************//
 

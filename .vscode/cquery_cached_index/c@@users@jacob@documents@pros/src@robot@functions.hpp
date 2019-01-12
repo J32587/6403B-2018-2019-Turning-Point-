@@ -33,5 +33,7 @@ int inToTick(float inch);
 int inToTickSide(float inch);
 int sign(int in);
 void setMotors(int mySpeedL,int mySpeedR);
-void updateData();
+inline void updateDataP();
 void resetData();
+void reloadPuncher(void*);
+void moveRobotPID (const string direction, float target, float waitTime, int maxPower);

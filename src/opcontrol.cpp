@@ -16,7 +16,6 @@
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
 void opcontrol()
 {
 
@@ -24,7 +23,7 @@ void opcontrol()
 	int X4 = 0;
 	int Y3 = 0;
  const	int _deadzone = 16;
-
+Task ReloadPuncherTask (reloadPuncher);
 	while (true)
 	{
 			// Check deadzones for base control
@@ -43,24 +42,24 @@ void opcontrol()
 			Y3 = Controller1.get_analog(ANALOG_LEFT_Y);
 		  }
 			else Y3 = 0;
-				LFDrive.move(Y3 + X4 + X1);
-				RFDrive.move(Y3 - X4 - X1);
-				LBDrive.move(Y3 - X4 + X1);
-				RBDrive.move(Y3 + X4 - X1);
+				LFDrive.move(-(Y3 + X4 + X1));
+				RFDrive.move(-(Y3 - X4 - X1));
+				LBDrive.move(-(Y3 - X4 + X1));
+				RBDrive.move(-(Y3 + X4 - X1));
 
 			if (Controller1.get_digital(E_CONTROLLER_DIGITAL_R1)){
-				Intake.move(90);
+				Intake.move(95);
 			}
 			else if (Controller1.get_digital(E_CONTROLLER_DIGITAL_L1)){
-				Intake.move(-90);
+				Intake.move(-95);
 			}
 			else {
 				Intake.move(0);
 	}
 	if(Controller1.get_digital(E_CONTROLLER_DIGITAL_R2))
-	Lift.move(120);
-	else if(Controller1.get_digital(E_CONTROLLER_DIGITAL_L2))
 	Lift.move(-120);
+	else if(Controller1.get_digital(E_CONTROLLER_DIGITAL_L2))
+	Lift.move(120);
 	else Lift.move(0);
 
 	}
