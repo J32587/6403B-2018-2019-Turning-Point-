@@ -5,14 +5,20 @@
 //open terminal with Ctrl+Shift+P; then type in terminal
 
 
+float frontLeftDrive = 0;
+float frontRightDrive = 0;
+float backLeftDrive = 0;
+float backRightDrive = 0;
+float Gyro = 0;
+
 //************Motor Enconder Functions*************//
 
 void setMotors(int mySpeedL,int mySpeedR)
 	{
-LFDrive.move_voltage(mySpeedL);
-LBDrive.move_voltage(mySpeedL);
-RFDrive.move_voltage(mySpeedR);
-RBDrive.move_voltage(mySpeedR);
+LFDrive.move(mySpeedL);
+LBDrive.move(mySpeedL);
+RFDrive.move(mySpeedR);
+RBDrive.move(mySpeedR);
 	}
 
 
@@ -25,60 +31,53 @@ void resetData()
   myGyro.reset();
 }
 
+inline void lcd_clear()
+{
+	lcd::clear_line(1);
+	lcd::clear_line(2);
+	lcd::clear_line(3);
+	lcd::clear_line(4);
+}
+
 
 //************ Auto DrawBack *************/
 
 
 bool reload = false;
 bool autoIntake = false;
-//The main medthod for the auto reload control
-void reloadPuncher(void*){
-  //Start an infinate loop to check for new button press
+
+void DRAWBACK_TASK(void*){
   while(true){
-    //When butotn is pressed start the sequence
+
     if (Controller1.get_digital(E_CONTROLLER_DIGITAL_Y)){
-      //Initialize iteration variable
+
       int i = 0;
 
-      //Runs the puncher until the current draw dips and
-      //until the 120th iteration to prevent the loop ending
-      //when the current draw is low due to motor starting to spin
       while(true){
-        //Moves puncher back and reset encoder position in
-        //preperation for next procedure
+
         Puncher.move(127);
         Puncher.tare_position();
-
-        //Adds one to iteration counter
         i++;
 
-        //Checks if needs to break out of loop
-        if (Puncher.get_current_draw() < 300 && i > 120)
+        if (Puncher.get_current_draw() < 310 && i > 135)
         break;
 
-        ///Dont wanna stress out the poor brain dont we
         delay(2);
       }
 
-      //Cock backs the puncher until it is about to shoot
-      //again, so the puncher is ready to fire instantly
       while (true){
-        //Moves puncher back
+
         Puncher.move(127);
 
-        //Checks if needs to break out of loop
-        if (fabs(Puncher.get_position()) > 825)
+        if (fabs(Puncher.get_position()) > 770)
         break;
 
-        //Dont wanna stress out the poor brain dont we
         delay(2);
       }
-      //Stops puncher from moving once it is out of the
-      //auto reload procedure
+
       Puncher.move(0);
     }
 
-    //Dont wanna stress out the poor brain do we
     delay(20);
   }
 }
@@ -86,6 +85,15 @@ void reloadPuncher(void*){
 
 
 //****************** PID Functions *******************//
+
+inline void updateDataP()
+{
+ frontLeftDrive = LFDrive.get_position();
+ frontRightDrive = RFDrive.get_position();
+ backLeftDrive = LBDrive.get_position();
+ backRightDrive = RBDrive.get_position();
+ Gyro = myGyro.get_value();
+}
 
 int inToTick (float inch)
 {
@@ -124,24 +132,18 @@ int sign (int in){
   return out;
 }
 
-int driveRightPos()
+int rightDrivePos()
 {
-  return fabs(frontLeftDrive + fabs(backLeftDrive));
+	updateDataP();
+  return (fabs(frontLeftDrive) + fabs(backLeftDrive));
 }
 
-int driveLeftPos()
+int leftDrivePos()
 {
-  return fabs(frontRightDrive + fabs(backLeftDrive));
+	updateDataP();
+  return (fabs(frontRightDrive) + fabs(backLeftDrive));
 }
 
-inline void updateDataP()
-{
- frontLeftDrive = LFDrive.get_position();
- frontRightDrive = RFDrive.get_position();
- backLeftDrive = LBDrive.get_position();
- backRightDrive = RBDrive.get_position();
- Gyro = myGyro.get_value();
-}
 
 Timer PID;
 void moveRobotPID (const string direction, float target, float waitTime, int maxPower){
@@ -191,7 +193,7 @@ void moveRobotPID (const string direction, float target, float waitTime, int max
 
 		while (true){
 			//Proportion control
-			error = inToTick(target) - (driveLeftPos() + driveRightPos());
+			error = inToTick(target) - (leftDrivePos() + rightDrivePos());
 			proportion = Kp * error;
 
 			//Drift control
@@ -313,7 +315,7 @@ void moveRobotPID (const string direction, float target, float waitTime, int max
 	if (direction == "east" || direction == "west"){
 		while(true){
 			//Proportion control
-			error = target - (driveLeftPos() + driveRightPos());
+			error = target - (leftDrivePos() + rightDrivePos());
 			proportion = Kp * error;
 
 			//Drift control

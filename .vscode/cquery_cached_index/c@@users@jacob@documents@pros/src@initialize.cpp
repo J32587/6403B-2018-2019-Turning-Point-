@@ -1,6 +1,7 @@
 #include "main.h"
 #include "Robot/Motors.h"
 #include "Robot/Global.hpp"
+#include "Robot/functions.hpp"
 
 int middle = 0;
 
@@ -25,8 +26,8 @@ void buttonMid()
   pressed = !pressed;
   if (pressed){
   middle = 1;
-  delay(300);
-  middle =0;
+  delay(100);
+  middle = 0;
            }
 
 }
@@ -36,6 +37,7 @@ void buttonMid()
 void selectAuton()
 {
 middle = 0;
+lcd_clear(); //removes any pre-existing text
 while(middle == 0)
   {
 lcd::register_btn1_cb(buttonMid);
@@ -43,7 +45,7 @@ lcd::register_btn1_cb(buttonMid);
    {
 case 0 :
 
-lcd::set_text(1,"Red Front");
+lcd::set_text(3,"               Red Front");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -52,7 +54,7 @@ lcd::register_btn0_cb(buttonSub);
 break;
 case 1 :
 
-lcd::set_text(1,"Blue Front");
+lcd::set_text(3,"               Blue Front");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -61,7 +63,7 @@ lcd::register_btn0_cb(buttonSub);
 break;
 case 2:
 
-lcd::set_text(1,"Red Back");
+lcd::set_text(3,"               Red Back");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -70,7 +72,7 @@ lcd::register_btn0_cb(buttonSub);
 break;
 case 3 :
 
-lcd::set_text(1,"Blue Back");
+lcd::set_text(3,"               Blue Back");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -78,7 +80,7 @@ lcd::register_btn0_cb(buttonSub);
 
 break;
 case 4 :
-lcd::set_text(1,"None");
+lcd::set_text(3,"                    None");
 
 lcd::register_btn2_cb(buttonAdd);
 
@@ -88,8 +90,9 @@ break;
 default :
 count = 0;
     }
-		delay(200);
+		delay(20);
   }
+  lcd_clear();
 }
 
 /**
@@ -98,11 +101,12 @@ count = 0;
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
+void initialize()
+{
 	lcd::initialize();
-
-
-
+  lcd::set_text(3,"               DO NOT MOVE"); //the spaces are used to put the text in the middle of the screen
+  delay(2000);
+  lcd::clear_line(3);
 }
 
 /**

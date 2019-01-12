@@ -26,14 +26,20 @@ int currentTime;
   }
 
 };
-
-int driveRightPos();
-int driveLeftPos();
+inline void lcd_clear();
+int rightDrivePos();
+int leftDrivePos();
 int inToTick(float inch);
 int inToTickSide(float inch);
 int sign(int in);
 void setMotors(int mySpeedL,int mySpeedR);
 inline void updateDataP();
 void resetData();
-void reloadPuncher(void*);
+void DRAWBACK_TASK(void*);
 void moveRobotPID (const string direction, float target, float waitTime, int maxPower);
+
+extern float frontLeftDrive;
+extern float frontRightDrive;
+extern float backLeftDrive;
+extern float backRightDrive;
+extern float Gyro;

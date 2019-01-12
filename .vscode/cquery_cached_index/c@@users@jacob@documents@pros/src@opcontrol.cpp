@@ -23,44 +23,44 @@ void opcontrol()
 	int X4 = 0;
 	int Y3 = 0;
  const	int _deadzone = 16;
-Task ReloadPuncherTask (reloadPuncher);
+Task DrawBack (DRAWBACK_TASK);
 	while (true)
 	{
-			// Check deadzones for base control
+lcd::set_text(1, to_string((rightDrivePos() + leftDrivePos())/4));
+lcd::set_text(2, to_string(myGyro.get_value()));
 			if (abs(Controller1.get_analog(ANALOG_RIGHT_X)) > _deadzone)
-			{
 			X1 = Controller1.get_analog(ANALOG_RIGHT_X);
-		  }
 			else X1 = 0;
+
 			if (abs(Controller1.get_analog(ANALOG_LEFT_X)) > _deadzone)
-			{
 			X4 = Controller1.get_analog(ANALOG_LEFT_X);
-		  }
 			else X4 = 0;
+
 			if (abs(Controller1.get_analog(ANALOG_LEFT_Y)) > _deadzone)
-			{
 			Y3 = Controller1.get_analog(ANALOG_LEFT_Y);
-		  }
 			else Y3 = 0;
+
+			//Had to make these values neg because the driver controller was backwards
 				LFDrive.move(-(Y3 + X4 + X1));
 				RFDrive.move(-(Y3 - X4 - X1));
 				LBDrive.move(-(Y3 - X4 + X1));
 				RBDrive.move(-(Y3 + X4 - X1));
 
-			if (Controller1.get_digital(E_CONTROLLER_DIGITAL_R1)){
-				Intake.move(95);
-			}
-			else if (Controller1.get_digital(E_CONTROLLER_DIGITAL_L1)){
-				Intake.move(-95);
-			}
-			else {
-				Intake.move(0);
-	}
+			if (Controller1.get_digital(E_CONTROLLER_DIGITAL_R1))
+		  Intake.move(95);
+			else if (Controller1.get_digital(E_CONTROLLER_DIGITAL_L1))
+			Intake.move(-95);
+			else
+			Intake.move(0);
+
+
 	if(Controller1.get_digital(E_CONTROLLER_DIGITAL_R2))
 	Lift.move(-120);
 	else if(Controller1.get_digital(E_CONTROLLER_DIGITAL_L2))
 	Lift.move(120);
 	else Lift.move(0);
 
+
+   delay(20);
 	}
 }
