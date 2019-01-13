@@ -4,9 +4,9 @@
 #include "BlueFront.hpp"
 const short unsigned int _autonSpeed = 100;
 Timer BLUEFRONT;
-BLUEFRONT.reset();
 void BlueFront(void)
 {
+  BLUEFRONT.resetTimer();
   Task reload(DRAWBACK_AUTON_TASK);
   Intake.move(90);
   moveRobotPID("north",40,200,_autonSpeed);
@@ -34,8 +34,13 @@ void BlueFront(void)
   moveRobotPID("south",13,250,_autonSpeed);
   delay(150);
   Lift.move(-127);
-  delay(250);
+  delay(270);
   Lift.move(0);
+  moveRobotPID("left turn",150,250,_autonSpeed);
+  delay(150);
+  shoot(false);
+  lcd::set_text(4,to_string(BLUEFRONT.getTime()));
+  Puncher.move(0);
 
   //delay(250);
 
