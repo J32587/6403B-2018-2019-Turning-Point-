@@ -26,7 +26,7 @@ int currentTime;
   }
 
 };
-inline void lcd_clear();
+void lcd_clear();
 int rightDrivePos();
 int leftDrivePos();
 int inToTick(float inch);
@@ -36,6 +36,8 @@ void setMotors(int mySpeedL,int mySpeedR);
 inline void updateDataP();
 void resetData();
 void DRAWBACK_TASK(void*);
+void DRAWBACK_AUTON_TASK(void*);
+void shoot(bool intake);
 void moveRobotPID (const string direction, float target, float waitTime, int maxPower);
 
 extern float frontLeftDrive;

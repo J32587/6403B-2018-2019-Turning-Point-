@@ -31,7 +31,7 @@ void resetData()
   myGyro.reset();
 }
 
-inline void lcd_clear()
+void lcd_clear()
 {
 	lcd::clear_line(1);
 	lcd::clear_line(2);
@@ -41,10 +41,6 @@ inline void lcd_clear()
 
 
 //************ Auto DrawBack *************/
-
-
-bool reload = false;
-bool autoIntake = false;
 
 void DRAWBACK_TASK(void*){
   while(true){
@@ -59,7 +55,7 @@ void DRAWBACK_TASK(void*){
         Puncher.tare_position();
         i++;
 
-        if (Puncher.get_current_draw() < 310 && i > 135)
+        if (Puncher.get_current_draw() < 305 && i > 135)
         break;
 
         delay(2);
@@ -69,7 +65,7 @@ void DRAWBACK_TASK(void*){
 
         Puncher.move(127);
 
-        if (fabs(Puncher.get_position()) > 770)
+        if (fabs(Puncher.get_position()) > 660)
         break;
 
         delay(2);
@@ -80,6 +76,59 @@ void DRAWBACK_TASK(void*){
 
     delay(20);
   }
+}
+bool drawBack = false;
+bool intake = false;
+
+void DRAWBACK_AUTON_TASK(void*){
+  while(true){
+
+    if (drawBack){
+
+      int i = 0;
+
+      if (intake){
+        Intake.move(127);
+      }
+
+      while(true){
+        Puncher.move(127);
+        Puncher.tare_position();
+
+
+        if (Puncher.get_current_draw() < 305 && i > 135)
+        break;
+
+        i++;
+
+        delay(2);
+      }
+
+      while (true){
+        Puncher.move(127);
+
+        if (fabs(Puncher.get_position()) > 660)
+        break;
+
+        delay(2);
+      }
+      Puncher.move(0);
+
+      if (intake){
+        Intake.move(0);
+      }
+      drawBack = false;
+    }
+
+    delay(20);
+  }
+}
+
+//Shoot puncher method that make it easy to set
+//the variables for the auto reload task
+void shoot (bool intake){
+  drawBack = true;
+  intake = intake;
 }
 
 
@@ -114,10 +163,7 @@ int inToTickSide (float inch)
 
   int ticks;
   const int _conversionFactor = 127;
-
   ticks = inch * _conversionFactor;
-
-  //Return ticks
   return ticks;
 }
 
@@ -130,6 +176,29 @@ int sign (int in){
 
   //Return sign
   return out;
+}
+
+int inchToTicks (float inch){
+  //Define return variable
+  int ticks;
+  //For every 70 ticks, the robot has moved 1" forward or backward
+  const int conversionFactor = 70;
+  //Multiply the desiered inch by conversion rate
+  ticks = inch * conversionFactor;
+
+  //Return the number of ticks
+  return ticks;
+}
+
+//Calculates the number of ticks it take to move one inch lateraly
+int inchToTickStrafe (float inch)
+{
+  int ticks;
+
+  const int conversionFactor = 127;
+  ticks = inch * conversionFactor;
+
+  return ticks;
 }
 
 int rightDrivePos()
@@ -146,240 +215,253 @@ int leftDrivePos()
 
 
 Timer PID;
-void moveRobotPID (const string direction, float target, float waitTime, int maxPower){
-	PID.resetTimer();
-	//Constants for Axial Movement
-	const float Kp = 0.2;
-	const float Kp_C = 1;
-	const float Ki = 0.1;
-	const float Kd = 0.5;
+void moveRobotPID (string direction, float target, float waitTime, int maxPower){
+  //Constants for Axial Movement
+  const float Kp = 0.2;
+  const float Kp_C = 1;
+  const float Ki = 0.1;
+  const float Kd = 0.4;
 
-	//Constants for Turing
-	const float Kp_turn = 0.2;
-	const float Ki_turn = 0.1;
-	const float Kd_turn = 0.4;
+  //Constants for Turing
+  const float Kp_turn = 0.2;
+  const float Ki_turn = 0.1;
+  const float Kd_turn = 0.4;
 
-	//PID Variables
-	float error;
-	float proportion;
-	float integralRaw;
-	float integral;
-	float lastError;
-	float derivative;
+  //PID Variables
+  float error;
+  float proportion;
+  float integralRaw;
+  float integral;
+  float lastError;
+  float derivative;
 
-	//Drift Variables
-	float error_drift;
-	float proportion_drift;
+  //Drift Variables
+  float error_drift;
+  float proportion_drift;
 
-	//Intigral Limits
-	const float integralPowerLimit = 10 / Ki;
-	const float integralActiveZone = inToTick(3);
+  //Intigral Limits
+  const float integralPowerLimit = 20 / Ki;
+  const float integralActiveZone = inchToTicks(3);
 
-	//Final Power
-	int finalPower;
-	int minPower = 15;
+  //Final Power
+  int finalPower;
+  const int minPower = 15;
 
-	//Initialize Sensors and Timers
-	bool timerLock = true;
-	resetData();
-	PID.resetTimer();
-	//Set minimum wait time
-	if (waitTime <= 250){
-		waitTime = 250;
-	}
+  //Initialize Sensors and Timers
+  bool timerLock = true;
+  resetData();
+  Timer PID = Timer();
+  PID.resetTimer();
 
-	//Check for axial movement
-	if (direction == "north" || direction == "south"){
+  //Set minimum wait time
+  if (waitTime <= 250){
+    waitTime = 250;
+  }
 
-		while (true){
-			//Proportion control
-			error = inToTick(target) - (leftDrivePos() + rightDrivePos());
-			proportion = Kp * error;
+  //TESTING
+  int maxLeftPower = 0;
+  int maxRightPower = 0;
 
-			//Drift control
-			error_drift = myGyro.get_value();
-			proportion_drift = Kp_C * error_drift;
+  //Check for axial movement
+  if (direction == "north" || direction == "south"){
+    //Infinate loop
+    while (true){
+      //Proportion control
+      error = inchToTicks(target) - ((leftDrivePos() + rightDrivePos())/4);
+      proportion = Kp * error;
 
-			//Integral control
-			if (fabs(error) < integralActiveZone && error > 5)
-			integralRaw = integralRaw + error;
-			else
-			integralRaw = 0;
+      //Drift control
+      error_drift = myGyro.get_value();
+      proportion_drift = Kp_C * error_drift;
 
-			if (integralRaw > 20)
-			integralRaw = 20;
-			if (integralRaw < -20)
-			integralRaw = -20;
+      //Integral control
+      if (fabs(error) < integralActiveZone && error != 0)
+      integralRaw = integralRaw + error;
+      else
+      integralRaw = 0;
 
-			integral = Ki * integralRaw;
+      if (integralRaw > 20)
+      integralRaw = 20;
+      if (integralRaw < -20)
+      integralRaw = -20;
 
-			//Derivative control
-			derivative = Kd * (error - lastError);
-			lastError = error;
-			if (error == 0)
-			derivative = 0;
+      integral = Ki * integralRaw;
 
-			//Set final power
-			finalPower = proportion + integral + derivative;
+      //Derivative control
+      derivative = Kd * (error - lastError);
+      lastError = error;
+      if (error == 0)
+      derivative = 0;
 
-			if (abs(finalPower) > maxPower){
-				finalPower = maxPower;
-			}
-			else {
-				finalPower = sign(finalPower) * (abs(finalPower) /*+ 15*/);
-			}
+      //Set final power
+      finalPower = proportion + integral + derivative;
 
-			//Move motors
-			if (direction == "north")
-			setMotors(finalPower - proportion_drift, finalPower + proportion_drift);
-			else if (direction == "south")
-			setMotors(-finalPower - proportion_drift, -finalPower + proportion_drift);
+      if (abs(finalPower) > maxPower){
+        finalPower = maxPower;
+      }
+      else if (abs(finalPower) < 20){
+        finalPower = 20;
+      }
 
-			//When where is 100 error left (1.0") start the wait timer to end the loop
-			if (error < 100){
-				timerLock = false;
-			}
-			if (timerLock){
-				PID.resetTimer();
-			}
-			if (PID.getTime() >= waitTime){
-				break;
-			}
+      //Move motors
+      if (direction == "north")
+      setMotors(finalPower - proportion_drift, finalPower + proportion_drift);
+      else if (direction == "south")
+      setMotors(-finalPower - proportion_drift, -finalPower + proportion_drift);
 
-			//Dont wanna over load the poor CPU now do we
-			delay(20);
-		}
-	}
+      if ((finalPower - proportion_drift) > maxLeftPower){
+        maxLeftPower = finalPower - proportion_drift;
+      }
+      if ((finalPower + proportion_drift) > maxRightPower){
+        maxRightPower = finalPower + proportion_drift;
+      }
+      //When where is 100 error left (0.3") start the wait timer to end the loop
+      if (error < 100){
+        timerLock = false;
+      }
+      if (timerLock){
+        PID.resetTimer();
+      }
+      if (PID.getTime() >= waitTime){
+        break;
+      }
 
-	//Check for turning
-	else if (direction == "left" || direction == "right"){
-		//Infinate loop
-		while (true){
-			//Proportion control
-			error = fabs(target * 10) - fabs(myGyro.get_value());
-			proportion = Kp_turn * error;
+      //Dont wanna over load the poor CPU now do we
+      delay(20);
+    }
+  }
 
-			//Integral control
-			if (fabs(error) < integralActiveZone && fabs(error) != 0)
-			integralRaw = integralRaw + error;
-			else
-			integralRaw = 0;
+  //Check for turning
+  else if (direction == "left turn" || direction == "right turn"){
+    //Infinate loop
+    while (true){
+      //Proportion control
+      error = fabs(target * 10) - fabs(myGyro.get_value());
+      proportion = Kp_turn * error;
 
-			if (integralRaw > 20)
-			integralRaw = 20;
-			if (integralRaw < -20)
-			integralRaw = -20;
+      //Integral control
+      if (fabs(error) < integralActiveZone && fabs(error) != 0)
+      integralRaw = integralRaw + error;
+      else
+      integralRaw = 0;
 
-			integral = Ki_turn * integralRaw;
+      if (integralRaw > 20)
+      integralRaw = 20;
+      if (integralRaw < -20)
+      integralRaw = -20;
 
-			//Derivative control
-			derivative = Kd_turn * (error - lastError);
-			lastError = error;
-			if (error == 0)
-			derivative = 0;
+      integral = Ki_turn * integralRaw;
 
-			//Set final power
-			finalPower = proportion + integral + derivative;
+      //Derivative control
+      derivative = Kd_turn * (error - lastError);
+      lastError = error;
+      if (error == 0)
+      derivative = 0;
 
-			if (abs(finalPower) > maxPower){
-				finalPower = maxPower;
-			}
-			else {
-				finalPower = sign(finalPower) * (abs(finalPower) /*+ 15*/);
-			}
+      //Set final power
+      finalPower = proportion + integral + derivative;
 
-			//Move motors
-			if (direction == "left")
-			setMotors(-finalPower - proportion_drift, finalPower + proportion_drift);
-			else if (direction == "right")
-			setMotors(finalPower - proportion_drift, -finalPower + proportion_drift);
+      if (abs(finalPower) > maxPower){
+        finalPower = maxPower;
+      }
+      else {
+        finalPower = sign(finalPower) * (abs(finalPower) + 15);
+      }
 
-			//When where is 100 error left (1.0") start the wait timer to end the loop
-			if (error < 100){
-				timerLock = false;
-			}
+      //Move motors
+      if (direction == "left turn")
+      setMotors(-finalPower - proportion_drift, finalPower + proportion_drift);
+      else if (direction == "right turn")
+      setMotors(finalPower - proportion_drift, -finalPower + proportion_drift);
 
-			if (timerLock){
-				PID.resetTimer();
-			}
+      //When where is 100 error left (1.0") start the wait timer to end the loop
+      if (error < 100){
+        timerLock = false;
+      }
 
-			if (PID.getTime() >= waitTime){
-				break;
-			}
+      if (timerLock){
+        PID.resetTimer();
+      }
 
-			delay(20);
-		}
-	}
+      if (PID.getTime() >= waitTime){
+        break;
+      }
 
-	//Checks for lateral movement
-	if (direction == "east" || direction == "west"){
-		while(true){
-			//Proportion control
-			error = target - (leftDrivePos() + rightDrivePos());
-			proportion = Kp * error;
+      //Dont wanna over load the poor CPU now do we
+      delay(20);
+    }
+  }
 
-			//Drift control
-			error_drift = myGyro.get_value();
-			proportion_drift = Kp_C * error_drift;
+  //Checks for lateral movement
+  if (direction == "east" || direction == "west"){
+    while(true){
+      //Proportion control
+      error = inchToTickStrafe(target) - ((leftDrivePos() + rightDrivePos())/4);
+      proportion = Kp * error;
 
-			//Integral control
-			if (fabs(error) < integralActiveZone && error > 5)
-			integralRaw = integralRaw + error;
-			else
-			integralRaw = 0;
+      //Drift control
+      error_drift = myGyro.get_value();
+      proportion_drift = Kp_C * error_drift;
 
-			if (integralRaw > 20)
-			integralRaw = 20;
-			if (integralRaw < -20)
-			integralRaw = -20;
+      //Integral control
+      if (fabs(error) < integralActiveZone && error > 5)
+      integralRaw = integralRaw + error;
+      else
+      integralRaw = 0;
 
-			integral = Ki * integralRaw;
+      if (integralRaw > 20)
+      integralRaw = 20;
+      if (integralRaw < -20)
+      integralRaw = -20;
 
-			//Derivative control
-			derivative = Kd * (error - lastError);
-			lastError = error;
-			if (error == 0)
-			derivative = 0;
+      integral = Ki * integralRaw;
 
-			//Set final power
-			finalPower = proportion + integral + derivative;
+      //Derivative control
+      derivative = Kd * (error - lastError);
+      lastError = error;
+      if (error == 0)
+      derivative = 0;
 
-			if (abs(finalPower) > maxPower){
-				finalPower = maxPower;
-			}
-			else {
-				finalPower = sign(finalPower) * (abs(finalPower) /*+ 15*/);
-			}
+      //Set final power
+      finalPower = proportion + integral + derivative;
 
-			//Move motors
-			setMotors(-finalPower - proportion_drift, -finalPower + proportion_drift);
-			if (direction == "west"){
-				LFDrive.move(-finalPower - proportion_drift);
-				RFDrive.move(finalPower + proportion_drift);
-				LBDrive.move(finalPower - proportion_drift);
-				RBDrive.move(-finalPower + proportion_drift);
-			}
-			else if (direction == "east"){
-				LFDrive.move(finalPower - proportion_drift);
-				RFDrive.move(-finalPower + proportion_drift);
-				LBDrive.move(-finalPower - proportion_drift);
-				RBDrive.move(finalPower + proportion_drift);
-			}
+      if (abs(finalPower) > maxPower){
+        finalPower = maxPower;
+      }
+      else {
+        finalPower = sign(finalPower) * (abs(finalPower) + 15);
+      }
 
-			//When where is 100 error left (1.0") start the wait timer to end the loop
-			if (error < 100){
-				timerLock = false;
-			}
-			if (timerLock){
-				PID.resetTimer();
-			}
-			if (PID.getTime() >= waitTime){
-				break;
-			}
+      //Move motors
+      setMotors(-finalPower - proportion_drift, -finalPower + proportion_drift);
+      if (direction == "west"){
+        LFDrive.move(-finalPower - proportion_drift);
+        RFDrive.move(finalPower + proportion_drift);
+        LBDrive.move(finalPower - proportion_drift);
+        RBDrive.move(-finalPower + proportion_drift);
+      }
+      else if (direction == "east"){
+        LFDrive.move(finalPower - proportion_drift);
+        RFDrive.move(-finalPower + proportion_drift);
+        LBDrive.move(-finalPower - proportion_drift);
+        RBDrive.move(finalPower + proportion_drift);
+      }
 
-			delay(20);
-		}
-	}
-	//Turn off the drive
-	setMotors(0, 0);
+      //When where is 100 error left (1.0") start the wait timer to end the loop
+      if (error < 100){
+        timerLock = false;
+      }
+      if (timerLock){
+        PID.resetTimer();
+      }
+      if (PID.getTime() >= waitTime){
+        break;
+      }
+
+      //Dont wanna over load the poor CPU now do we
+      delay(20);
+    }
+  }
+  //Turn off the drive
+  setMotors(0, 0);
 }

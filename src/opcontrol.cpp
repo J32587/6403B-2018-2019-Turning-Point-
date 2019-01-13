@@ -41,10 +41,10 @@ lcd::set_text(2, to_string(myGyro.get_value()));
 			else Y3 = 0;
 
 			//Had to make these values neg because the driver controller was backwards
-				LFDrive.move(-(Y3 + X4 + X1));
-				RFDrive.move(-(Y3 - X4 - X1));
-				LBDrive.move(-(Y3 - X4 + X1));
-				RBDrive.move(-(Y3 + X4 - X1));
+				LFDrive.move(Y3 + X4 + X1);
+				RFDrive.move(Y3 - X4 - X1);
+				LBDrive.move(Y3 - X4 + X1);
+				RBDrive.move(Y3 + X4 - X1);
 
 			if (Controller1.get_digital(E_CONTROLLER_DIGITAL_R1))
 		  Intake.move(95);
