@@ -55,7 +55,7 @@ void DRAWBACK_TASK(void*){
         Puncher.tare_position();
         i++;
 
-        if (Puncher.get_current_draw() < 305 && i > 135)
+        if (Puncher.get_current_draw() < 310 && i > 115)
         break;
 
         delay(2);
@@ -96,7 +96,7 @@ void DRAWBACK_AUTON_TASK(void*){
         Puncher.tare_position();
 
 
-        if (Puncher.get_current_draw() < 305 && i > 135)
+        if (Puncher.get_current_draw() < 310 && i > 115)
         break;
 
         i++;
