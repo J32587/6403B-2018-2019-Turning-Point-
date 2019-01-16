@@ -55,7 +55,7 @@ void DRAWBACK_TASK(void*){
         Puncher.tare_position();
         i++;
 
-        if (Puncher.get_current_draw() < 310 && i > 115)
+        if (Puncher.get_current_draw() < 300 && i > 120)
         break;
 
         delay(2);
@@ -65,7 +65,7 @@ void DRAWBACK_TASK(void*){
 
         Puncher.move(127);
 
-        if (fabs(Puncher.get_position()) > 660)
+        if (fabs(Puncher.get_position()) > 900)
         break;
 
         delay(2);
@@ -96,7 +96,7 @@ void DRAWBACK_AUTON_TASK(void*){
         Puncher.tare_position();
 
 
-        if (Puncher.get_current_draw() < 310 && i > 115)
+        if (Puncher.get_current_draw() < 300 && i > 120)
         break;
 
         i++;
@@ -107,7 +107,7 @@ void DRAWBACK_AUTON_TASK(void*){
       while (true){
         Puncher.move(127);
 
-        if (fabs(Puncher.get_position()) > 660)
+        if (fabs(Puncher.get_position()) > 900)
         break;
 
         delay(2);
@@ -315,7 +315,7 @@ void moveRobotPID (string direction, float target, float waitTime, int maxPower)
       if ((finalPower + proportion_drift) > maxRightPower){
         maxRightPower = finalPower + proportion_drift;
       }
-      //When where is 100 error left (0.3") start the wait timer to end the loop
+
       if (error < 100){
         timerLock = false;
       }
@@ -326,7 +326,6 @@ void moveRobotPID (string direction, float target, float waitTime, int maxPower)
         break;
       }
 
-      //Dont wanna over load the poor CPU now do we
       delay(20);
     }
   }
@@ -387,7 +386,6 @@ void moveRobotPID (string direction, float target, float waitTime, int maxPower)
         break;
       }
 
-      //Dont wanna over load the poor CPU now do we
       delay(20);
     }
   }

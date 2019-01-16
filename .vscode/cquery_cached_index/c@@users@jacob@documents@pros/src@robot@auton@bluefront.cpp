@@ -33,9 +33,7 @@ void BlueFront(void)
   shoot(false);
   delay(550);
   moveRobotPID("right turn",4,200,_autonSpeed);//
-  setMotors(127,127);
-  delay(1190);
-  setMotors(0,0);
+  //moveRobotPID("")
   Intake.move(0);
   lcd::set_text(4,to_string(BLUEFRONT.getTime()));
   Puncher.move(0);
