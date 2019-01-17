@@ -23,7 +23,7 @@ void RedFront(void)
   delay(540);
   moveRobotPID("west",3.25,250,_autonSpeed);
   moveRobotPID("north",23.5,230,_autonSpeed);
-  delay(200);
+  delay(170);
   moveRobotPID("south",20,230,_autonSpeed);
   moveRobotPID("left turn",97,240,_autonSpeed);//
   moveRobotPID("south",13,230,_autonSpeed);

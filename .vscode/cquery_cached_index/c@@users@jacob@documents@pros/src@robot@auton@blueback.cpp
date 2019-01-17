@@ -17,7 +17,7 @@ moveRobotPID("south",13,250,_autonSpeed);
 Lift.move(-127);
 delay(270);
 Lift.move(0);
-moveRobotPID("west",4.25,260,_autonSpeed);
+moveRobotPID("west",3,260,_autonSpeed);
 moveRobotPID("north",7,260,_autonSpeed);
 shoot(false);
 delay(550);

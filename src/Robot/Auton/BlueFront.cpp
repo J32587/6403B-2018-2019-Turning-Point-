@@ -24,7 +24,7 @@ void BlueFront(void)
   moveRobotPID("east",4.5,250,_autonSpeed);
   moveRobotPID("north",23.5,230,_autonSpeed);
   delay(200);
-  moveRobotPID("south",26.5,230,_autonSpeed);
+  moveRobotPID("south",27.5,230,_autonSpeed);
   moveRobotPID("right turn",97,240,_autonSpeed);//
   moveRobotPID("south",16,230,_autonSpeed);
   Lift.move(-127);
