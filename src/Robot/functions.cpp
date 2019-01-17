@@ -47,15 +47,12 @@ void DRAWBACK_TASK(void*){
 
     if (Controller1.get_digital(E_CONTROLLER_DIGITAL_Y)){
 
-      int i = 0;
-
       while(true){
 
         Puncher.move(127);
         Puncher.tare_position();
-        i++;
 
-        if (Puncher.get_current_draw() < 300 && i > 120)
+        if (Puncher.get_current_draw() < 300 && Puncher.get_actual_velocity() > 175)
         break;
 
         delay(2);
@@ -65,7 +62,7 @@ void DRAWBACK_TASK(void*){
 
         Puncher.move(127);
 
-        if (fabs(Puncher.get_position()) > 900)
+        if (fabs(Puncher.get_position()) > 790)
         break;
 
         delay(2);
@@ -85,8 +82,6 @@ void DRAWBACK_AUTON_TASK(void*){
 
     if (drawBack){
 
-      int i = 0;
-
       if (intake){
         Intake.move(127);
       }
@@ -96,10 +91,8 @@ void DRAWBACK_AUTON_TASK(void*){
         Puncher.tare_position();
 
 
-        if (Puncher.get_current_draw() < 300 && i > 120)
+        if (Puncher.get_current_draw() < 300 && Puncher.get_actual_velocity() > 165)
         break;
-
-        i++;
 
         delay(2);
       }
@@ -107,7 +100,7 @@ void DRAWBACK_AUTON_TASK(void*){
       while (true){
         Puncher.move(127);
 
-        if (fabs(Puncher.get_position()) > 900)
+        if (fabs(Puncher.get_position()) > 790)
         break;
 
         delay(2);
@@ -296,10 +289,10 @@ void moveRobotPID (string direction, float target, float waitTime, int maxPower)
       //Set final power
       finalPower = proportion + integral + derivative;
 
-      if (abs(finalPower) > maxPower){
+      if (finalPower > maxPower){
         finalPower = maxPower;
       }
-      else if (abs(finalPower) < 20){
+      else if (finalPower < -maxPower){
         finalPower = 20;
       }
 

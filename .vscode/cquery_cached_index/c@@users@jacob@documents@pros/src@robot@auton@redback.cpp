@@ -6,18 +6,23 @@ Timer REDBACK;
 void RedBack(void)
 {
 const short unsigned int _autonSpeed = 100;
+Task reload(DRAWBACK_AUTON_TASK);
 REDBACK.resetTimer();
-Intake.move(127);
-moveRobotPID("north,",34,250,_autonSpeed);
-delay(290);
+Intake.move(60);
+moveRobotPID("north",46,250,_autonSpeed);
+delay(390);
 Intake.move(0);
-moveRobotPID("left turn",120, 250, _autonSpeed);
-delay(250);
-moveRobotPID("south",12,250,_autonSpeed);
-delay(150);
+moveRobotPID("left turn",97, 250, _autonSpeed);
+moveRobotPID("south",13,250,_autonSpeed);
 Lift.move(-127);
 delay(270);
-Lift.move(-127);
+Lift.move(0);
+moveRobotPID("east",2.70,260,_autonSpeed);
+moveRobotPID("north",6.5,260,_autonSpeed);
+shoot(false);
+delay(550);
+moveRobotPID("west",13.5,250,_autonSpeed);
+moveRobotPID("north",46,250,_autonSpeed);
 lcd::set_text(4,std::to_string(REDBACK.getTime()));
 
 }
