@@ -40,6 +40,7 @@ BlueBack();
 break;
 
 case 4 :
+Skillz();
 break;
 
 default:

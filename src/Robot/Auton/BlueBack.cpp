@@ -18,10 +18,10 @@ Lift.move(-127);
 delay(270);
 Lift.move(0);
 moveRobotPID("west",3,260,_autonSpeed);
-moveRobotPID("north",7,260,_autonSpeed);
+moveRobotPID("north",11,260,_autonSpeed);
 shoot(false);
 delay(550);
-moveRobotPID("east",12,250,_autonSpeed);
+moveRobotPID("east",10.5,250,_autonSpeed);
 moveRobotPID("north",46,250,_autonSpeed);
 lcd::set_text(4,std::to_string(BLUEBACK.getTime()));
 

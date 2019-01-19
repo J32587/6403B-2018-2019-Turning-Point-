@@ -10,7 +10,7 @@ void BlueFront(void)
   Task reload(DRAWBACK_AUTON_TASK);
   Intake.move(70);
   moveRobotPID("north",39,200,_autonSpeed);
-  delay(345);
+  delay(275);
   Intake.move(0);
   moveRobotPID("south",38.5,230,_autonSpeed);
   moveRobotPID("right turn",97,230,_autonSpeed);
@@ -24,13 +24,13 @@ void BlueFront(void)
   moveRobotPID("east",4.5,250,_autonSpeed);
   moveRobotPID("north",23.5,230,_autonSpeed);
   delay(200);
-  moveRobotPID("south",27.5,230,_autonSpeed);
+  moveRobotPID("south",33.5,240,_autonSpeed);
   moveRobotPID("right turn",97,240,_autonSpeed);//
-  moveRobotPID("south",16,230,_autonSpeed);
+  moveRobotPID("south",14.5,230,_autonSpeed);
   Lift.move(-127);
   delay(230);
   Lift.move(0);
-  moveRobotPID("left turn",153,250,_autonSpeed);//
+  moveRobotPID("left turn",151,250,_autonSpeed);//
   shoot(false);
   delay(545);
   moveRobotPID("north",38,1,127);

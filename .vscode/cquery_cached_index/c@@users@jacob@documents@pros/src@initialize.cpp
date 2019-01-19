@@ -80,7 +80,7 @@ lcd::register_btn0_cb(buttonSub);
 
 break;
 case 4 :
-lcd::set_text(3,"                    None");
+lcd::set_text(3,"                    Skillz");
 
 lcd::register_btn2_cb(buttonAdd);
 
