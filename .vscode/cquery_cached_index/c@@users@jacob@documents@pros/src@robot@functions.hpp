@@ -36,8 +36,9 @@ void setMotors(int mySpeedL,int mySpeedR);
 inline void updateDataP();
 void resetData();
 void DRAWBACK_TASK(void*);
-void DRAWBACK_AUTON_TASK(void*);
-void shoot(bool intake);
+void DOUBLE_SHOOT(void*);
+void doubleShoot(void);
+void shoot(void);
 void moveRobotPID (const string direction, float target, float waitTime, int maxPower);
 
 extern float frontLeftDrive;

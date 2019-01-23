@@ -8,7 +8,7 @@ void Skillz(void)
 {
   const short unsigned int _autonSpeed = 97;
   SKILLZ.resetTimer();
-  Task reload(DRAWBACK_AUTON_TASK);
+  Task reload(DRAWBACK_TASK);
   moveRobotPID("north",50,250,120);
   Intake.move(120);
   delay(300);
@@ -19,11 +19,11 @@ void Skillz(void)
   moveRobotPID("south",50,250,_autonSpeed);
   moveRobotPID("left turn",97,250,_autonSpeed);
   moveRobotPID("north",53.5,250,_autonSpeed);
-  shoot(false);
+  shoot();
   delay(540);
   Intake.move(100);
   moveRobotPID("north",29,250,_autonSpeed);
-  shoot(false);
+  shoot();
   delay(540);
   reload.suspend();
   delay(100);
@@ -44,11 +44,11 @@ void Skillz(void)
   delay(100);
   moveRobotPID("west",4,250,_autonSpeed);
   moveRobotPID("left turn",96,250,_autonSpeed);
-  shoot(false);
+  shoot();
   delay(545);
   Intake.move(100);
   moveRobotPID("north",25,230,_autonSpeed);
-  shoot(false);
+  shoot();
   delay(545);
   reload.suspend();
   delay(100);
@@ -73,7 +73,7 @@ void Skillz(void)
   moveRobotPID("north",40,250,_autonSpeed);
   moveRobotPID("north",30,250,_autonSpeed);
 
-  lcd::set_text(4,std::to_string(SKILLZ.getTime()));
+SKILLZ.getTime();
 
 
 }

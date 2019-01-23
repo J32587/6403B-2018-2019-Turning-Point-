@@ -13,5 +13,7 @@ extern Motor Lift;
 extern Motor Intake;
 extern Controller Controller1;
 extern ADIGyro myGyro;
+extern ADIButton angleDown;
+extern ADIButton angleUp;
 
 #endif

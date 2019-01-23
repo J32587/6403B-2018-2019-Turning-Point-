@@ -1,6 +1,4 @@
 #include "main.h"
-#include "Robot/Motors.h"
-#include "Robot/functions.hpp"
 #include "Robot/Auton/All_Autons.hpp"
 #include "Robot/Global.hpp"
 
@@ -17,10 +15,9 @@
  * from where it left off.
  */
 
-
 void autonomous()
 {
-
+  // Swith statement that runs the choosen autonomous function //
   switch(count)
 	{
 case 0 :
@@ -46,5 +43,5 @@ break;
 default:
 count = 0;
 
-}
+ }
 }

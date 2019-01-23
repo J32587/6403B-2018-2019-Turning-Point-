@@ -1,2 +1,4 @@
 #include "main.h"
-extern int count;
+extern short count;
+extern bool SDSD; //shoot, draw, shoot, draw
+extern bool drawBack;
