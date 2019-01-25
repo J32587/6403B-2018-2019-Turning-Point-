@@ -12,8 +12,8 @@
 short middle = 0;
 short page = 0;
 
-/********************
- * CREATE A SCREEN  *
+/*********************
+ * CREATE TWO SCREENS*
  ********************/
 lv_obj_t * scr = lv_page_create(NULL, NULL);
 
@@ -89,12 +89,16 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
       return LV_RES_OK;
     }
 
+
+
+    static lv_style_t pagebtn;
+
+
 // Function that draws the buttons and sets their actions //
 
   void lv_objects(void)
 {
   lv_scr_load(scr);
-  static lv_style_t pagebtn;
   lv_style_copy(&pagebtn, &lv_style_plain);                              /*Styles can't be local variables*/
   pagebtn.body.border.color = LV_COLOR_GRAY;
   pagebtn.body.main_color = LV_COLOR_GRAY;
@@ -102,6 +106,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   pagebtn.body.grad_color = LV_COLOR_GRAY;           /*Blue gradient color*/
   pagebtn.body.border.width = 2;                     /*2 px border width*/
   pagebtn.body.empty = 1;
+  pagebtn.body.opa = LV_OPA_0;
 
    lv_page_set_sb_mode(scr2, LV_SB_MODE_OFF);
    lv_page_set_sb_mode(scr, LV_SB_MODE_OFF);
@@ -183,18 +188,26 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
  // Button to get back to the first page //
 
   lv_obj_t *secpage = lv_btn_create(scr2,NULL);
- lv_obj_set_size(secpage,50,50);
+ lv_obj_set_size(secpage,60,60);
  lv_btn_set_action(secpage, LV_BTN_ACTION_CLICK, page1);
- lv_obj_align(secpage,none,LV_ALIGN_IN_LEFT_MID,-37,45);
- lv_obj_set_style(secpage, &pagebtn);
+ lv_obj_align(secpage,none,LV_ALIGN_IN_LEFT_MID,-40,45);
+ lv_btn_set_style(secpage,LV_BTN_STYLE_PR, &pagebtn);
+ lv_btn_set_style(secpage,LV_BTN_STYLE_INA, &pagebtn);
+ lv_btn_set_style(secpage,LV_BTN_STYLE_TGL_PR, &pagebtn);
+ lv_btn_set_style(secpage,LV_BTN_STYLE_TGL_REL, &pagebtn);
+  lv_btn_set_style(secpage,LV_BTN_STYLE_REL, &pagebtn);
 
  // Button to get to the second page //
 
  lv_obj_t *firpage = lv_btn_create(scr,NULL);
- lv_obj_set_size(firpage,50,50);
+ lv_obj_set_size(firpage,60,60);
  lv_btn_set_action(firpage, LV_BTN_ACTION_CLICK, page2);
- lv_obj_align(firpage,redF,LV_ALIGN_IN_LEFT_MID,-37,45);
- lv_obj_set_style(firpage, &pagebtn);
+ lv_obj_align(firpage,redF,LV_ALIGN_IN_LEFT_MID,-40,45);
+ lv_btn_set_style(firpage,LV_BTN_STYLE_PR, &pagebtn);
+ lv_btn_set_style(firpage,LV_BTN_STYLE_INA, &pagebtn);
+ lv_btn_set_style(firpage,LV_BTN_STYLE_TGL_PR, &pagebtn);
+ lv_btn_set_style(firpage,LV_BTN_STYLE_TGL_REL, &pagebtn);
+  lv_btn_set_style(firpage,LV_BTN_STYLE_REL, &pagebtn);
 
 }
 

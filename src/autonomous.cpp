@@ -14,6 +14,7 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+ lv_obj_t * scr_none = lv_page_create(NULL, NULL);
 
 void autonomous()
 {
@@ -22,22 +23,27 @@ void autonomous()
 	{
 case 0 :
 RedFront();
+lv_scr_load(scr_none);
 break;
 
 case 1 :
 BlueFront();
+lv_scr_load(scr_none);
 break;
 
 case 2 :
 RedBack();
+lv_scr_load(scr_none);
 break;
 
 case 3 :
 BlueBack();
+lv_scr_load(scr_none);
 break;
 
 case 4 :
 Skillz();
+lv_scr_load(scr_none);
 break;
 
 case 5:
