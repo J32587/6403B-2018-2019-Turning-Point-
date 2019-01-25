@@ -16,9 +16,11 @@
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+
+
 void opcontrol()
 {
-
 // deadzone variable deleration and inzializtion //
 int X1 = 0;
 int X4 = 0;
@@ -30,6 +32,7 @@ Task DrawBack (DRAWBACK_TASK);
 Task DoubleShoot(DOUBLE_SHOOT);
 	while (true)
 	{
+    
 
 // Prints variables to the brain lcd //
 //lcd::set_text(1, to_string((rightDrivePos() + leftDrivePos())/4));

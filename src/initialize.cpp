@@ -10,7 +10,6 @@
  */
 
 int middle = 0;
-string auton = 0;
 
   static lv_res_t blueFront(lv_obj_t * btn)
   {
@@ -18,10 +17,9 @@ string auton = 0;
     delay(100);
     if (pressed)
     {
-      middle = 1;
       pressed = false;
       count = 1;
-      auton = "BLUE FRONT";
+
     }
     return LV_RES_OK;
   }
@@ -32,10 +30,8 @@ string auton = 0;
     delay(100);
     if (pressed)
     {
-      middle = 1;
       pressed = false;
       count = 0;
-      auton = "RED FRONT";
     }
     return LV_RES_OK;
   }
@@ -46,10 +42,8 @@ string auton = 0;
     delay(100);
     if (pressed)
     {
-      middle = 1;
       pressed = false;
       count = 3;
-      auton = "BLUE BACK";
     }
     return LV_RES_OK;
   }
@@ -60,29 +54,14 @@ string auton = 0;
     delay(100);
     if (pressed)
     {
-      middle = 1;
       pressed = false;
       count = 2;
-      auton = "RED BACK";
     }
     return LV_RES_OK;
   }
 
-  void lv_tutorial_objects(void)
+  void lv_objects(void)
 {
-
-  //    static lv_style_t button_style;
-  //       lv_style_copy(&button_style, &lv_style_plain);
-  // button_style.body.radius = LV_RADIUS_CIRCLE;
-  // button_style.body.main_color = vdb;
-   //button_style.body.grad_color = TRANSP;
-   //button_style.body.shadow.color = LV_COLOR_TRANSP;
-   //button_style.body.shadow.width = 0;
-   //button_style.body.border.width = 2;
-   //button_style.body.border.color = LV_COLOR_BLACK;
-   //button_style.text.color = LV_COLOR_WHITE;
-   //button_style.text.letter_space = 1;
-
 
     /********************
      * CREATE A SCREEN  *
@@ -90,13 +69,10 @@ string auton = 0;
     lv_obj_t * scr = lv_page_create(NULL, NULL);
     lv_scr_load(scr);
 
-    // Creates a screen object that has nothing displayed on it //
-    lv_obj_t * none = lv_page_create(NULL,NULL);
     /****************
      *     TITLE    *
      ****************/
-    while(middle == 0)
-    {
+
     lv_obj_t * label = lv_label_create(scr, NULL);
     lv_label_set_text(label, "Autonomous Selection");
     lv_obj_set_x(label, 145);
@@ -137,23 +113,12 @@ string auton = 0;
 
     label = lv_label_create(blueB,NULL);
     lv_label_set_text(label,"BLUE BACK");
-    delay(20);
-  }
-    lv_scr_load(none);
-  
+
 }
 
 void initialize()
 {
-  lv_tutorial_objects();
-
-
-
-//	lcd::initialize();
-//  lcd::set_text(3,"               DO NOT MOVE"); //the spaces are used to put the text in the middle of the screen
-//  delay(2000);
-//  lcd::clear_line(3);
-
+  lv_objects();
 
 }
 
@@ -164,7 +129,6 @@ void initialize()
  */
 void disabled()
 {
-//selectAuton();
 }
 
 /**
