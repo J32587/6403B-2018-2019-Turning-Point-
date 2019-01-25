@@ -98,16 +98,20 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
 
   void lv_objects(void)
 {
+  // Loads the main screen //
+
   lv_scr_load(scr);
-  lv_style_copy(&pagebtn, &lv_style_plain);                              /*Styles can't be local variables*/
+  // Sets the pagebtn style on the defult plain style and modify the style //
+  lv_style_copy(&pagebtn, &lv_style_plain);
   pagebtn.body.border.color = LV_COLOR_GRAY;
   pagebtn.body.main_color = LV_COLOR_GRAY;
-  pagebtn.body.radius = LV_RADIUS_CIRCLE;            /*Fully round corners*/
-  pagebtn.body.grad_color = LV_COLOR_GRAY;           /*Blue gradient color*/
-  pagebtn.body.border.width = 2;                     /*2 px border width*/
+  pagebtn.body.radius = LV_RADIUS_CIRCLE;
+  pagebtn.body.grad_color = LV_COLOR_GRAY;
+  pagebtn.body.border.width = 2;
   pagebtn.body.empty = 1;
   pagebtn.body.opa = LV_OPA_0;
 
+   // Gets rid of the scroll wheel //
    lv_page_set_sb_mode(scr2, LV_SB_MODE_OFF);
    lv_page_set_sb_mode(scr, LV_SB_MODE_OFF);
 
@@ -115,10 +119,13 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
      *     TITLES   *
      ****************/
 
+    // Creates a label object that is used for the title and for the label on the first screen //
+
     lv_obj_t * label = lv_label_create(scr, NULL);
     lv_label_set_text(label, "Autonomous Selection");
     lv_obj_set_x(label, 145);
 
+    // Creates a alabel object that is used for the title and for the label on the second screen //
 
     lv_obj_t * label2 = lv_label_create(scr2, NULL);
     lv_label_set_text(label2, "Autonomous Selection");
@@ -191,6 +198,9 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
  lv_obj_set_size(secpage,60,60);
  lv_btn_set_action(secpage, LV_BTN_ACTION_CLICK, page1);
  lv_obj_align(secpage,none,LV_ALIGN_IN_LEFT_MID,-40,45);
+
+ // Sets the style for all states the button can be in //
+ 
  lv_btn_set_style(secpage,LV_BTN_STYLE_PR, &pagebtn);
  lv_btn_set_style(secpage,LV_BTN_STYLE_INA, &pagebtn);
  lv_btn_set_style(secpage,LV_BTN_STYLE_TGL_PR, &pagebtn);
@@ -203,6 +213,8 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
  lv_obj_set_size(firpage,60,60);
  lv_btn_set_action(firpage, LV_BTN_ACTION_CLICK, page2);
  lv_obj_align(firpage,redF,LV_ALIGN_IN_LEFT_MID,-40,45);
+
+ // Sets the style for all states the button can be in //
  lv_btn_set_style(firpage,LV_BTN_STYLE_PR, &pagebtn);
  lv_btn_set_style(firpage,LV_BTN_STYLE_INA, &pagebtn);
  lv_btn_set_style(firpage,LV_BTN_STYLE_TGL_PR, &pagebtn);
