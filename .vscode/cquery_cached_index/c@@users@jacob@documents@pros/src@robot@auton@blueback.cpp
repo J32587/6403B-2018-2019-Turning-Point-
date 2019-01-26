@@ -7,8 +7,8 @@ Timer BLUEBACK;
 void BlueBack(void)
 {
 BLUEBACK.resetTimer();
-const short unsigned int _autonSpeed = 100;
-const short unsigned int _settleTime = 250;
+const short _autonSpeed = 100;
+const short _settleTime = 250;
 Task reload(DRAWBACK_TASK);
 Intake.move(60);
 moveRobotPID("north",46,_settleTime,_autonSpeed);

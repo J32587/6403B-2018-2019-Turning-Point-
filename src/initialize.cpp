@@ -200,7 +200,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
  lv_obj_align(secpage,none,LV_ALIGN_IN_LEFT_MID,-40,45);
 
  // Sets the style for all states the button can be in //
- 
+
  lv_btn_set_style(secpage,LV_BTN_STYLE_PR, &pagebtn);
  lv_btn_set_style(secpage,LV_BTN_STYLE_INA, &pagebtn);
  lv_btn_set_style(secpage,LV_BTN_STYLE_TGL_PR, &pagebtn);
@@ -225,6 +225,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
 
 void initialize()
 {
+
   lv_objects();
 }
 

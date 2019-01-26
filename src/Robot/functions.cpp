@@ -23,7 +23,7 @@ RFDrive.move(mySpeedR);
 RBDrive.move(mySpeedR);
 	}
 
-	// Updates the values of the motoro encoders //
+	// Updates the values of the motor encoders //
 	inline void updateDataP()
 	{
 	 frontLeftDrive = LFDrive.get_position();
@@ -71,6 +71,20 @@ void lcd_clear()
 
 //************ Auto DrawBack *************/
 
+
+
+// Sets bool drawBack to true (allows the auton DRAWBACK task to execute) //
+void shoot ()
+{
+  drawBack = true;
+}
+
+// Sets bool SDSD to true (allows the auton DOUBLE_SHOOT task to execute) //
+void doubleShoot()
+{
+	SDSD = true;
+}
+
 // Function setup for the opcontrol shoot & drawback task //
 void DRAWBACK_TASK(void*){
   while(true){
@@ -105,19 +119,6 @@ void DRAWBACK_TASK(void*){
   }
 	drawBack = false;
 }
-
-// Sets bool drawBack to true (allows the auton DRAWBACK task to execute) //
-void shoot ()
-{
-  drawBack = true;
-}
-
-// Sets bool SDSD to true (allows the auton DOUBLE_SHOOT task to execute) //
-void doubleShoot()
-{
-	SDSD = true;
-}
-
 
 // Functions setup for the opcontrol double shoot task //
 void DOUBLE_SHOOT (void*)
