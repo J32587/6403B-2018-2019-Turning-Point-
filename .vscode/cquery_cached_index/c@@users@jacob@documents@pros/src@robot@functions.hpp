@@ -13,6 +13,7 @@ int lastTime = millis();
 public:
 int myTime;
 int currentTime;
+
   int getTime()
   {
     myTime = millis();
@@ -26,6 +27,7 @@ int currentTime;
   }
 
 };
+
 void lcd_clear();
 int rightDrivePos();
 int leftDrivePos();
@@ -36,9 +38,10 @@ void setMotors(int mySpeedL,int mySpeedR);
 inline void updateDataP();
 void resetData();
 void DRAWBACK_TASK(void*);
-void DOUBLE_SHOOT(void*);
-void doubleShoot(void);
+void holdLift(void*);
+void DOUBLE_SHOOT(void);
 void shoot(void);
+void moveLift(int target);
 void moveRobotPID (const string direction, float target, float waitTime, int maxPower);
 
 extern float frontLeftDrive;

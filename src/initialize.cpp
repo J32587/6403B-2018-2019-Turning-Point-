@@ -1,6 +1,7 @@
 #include "main.h"
 #include "Robot/Global.hpp"
 #include "Robot/functions.hpp"
+#include "Robot/Motors.h"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -11,16 +12,23 @@
 
 short middle = 0;
 short page = 0;
+bool hit = true;
 
 /*********************
  * CREATE TWO SCREENS*
  ********************/
+
 lv_obj_t * scr = lv_page_create(NULL, NULL);
 
 lv_obj_t * scr2 = lv_page_create(NULL, NULL);
 
 
+/*****************************************************
+ * FUNCTION DECLRATION FOR AUTON SELECTION BUTTONS   *
+ *****************************************************/
+
 // Function that is called when the BLUEFRONT button is pressed //
+
   static lv_res_t blueFront(lv_obj_t * btn)
   {
     delay(100);
@@ -29,6 +37,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   }
 
 // Function that is called when the REDFRONT button is pressed //
+
   static lv_res_t redFront(lv_obj_t * btn)
   {
 
@@ -38,6 +47,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   }
 
 // Function that is called when the BLUEBACK button is pressed //
+
   static lv_res_t blueBack(lv_obj_t * btn)
   {
     delay(100);
@@ -46,6 +56,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   }
 
 // Function that is called when the REDBACK button is pressed //
+
   static lv_res_t redBack(lv_obj_t * btn)
   {
     delay(100);
@@ -55,6 +66,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
 
 
 // Function that is called when the SKILLZ button is pressed //
+
   static lv_res_t skillz(lv_obj_t * btn)
   {
     delay(100);
@@ -63,6 +75,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   }
 
  // Function that is called when the page2 button is pressed //
+
   static lv_res_t page2(lv_obj_t * btn)
   {
 
@@ -74,6 +87,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   }
 
 //Function that is called when the NONE button is pressed //
+
   static lv_res_t nothing(lv_obj_t * btn)
   {
     delay(100);
@@ -90,8 +104,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
     }
 
 
-
-    static lv_style_t pagebtn;
+static lv_style_t pagebtn;
 
 
 // Function that draws the buttons and sets their actions //
@@ -112,6 +125,7 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
   pagebtn.body.opa = LV_OPA_0;
 
    // Gets rid of the scroll wheel //
+
    lv_page_set_sb_mode(scr2, LV_SB_MODE_OFF);
    lv_page_set_sb_mode(scr, LV_SB_MODE_OFF);
 
@@ -226,7 +240,15 @@ lv_obj_t * scr2 = lv_page_create(NULL, NULL);
 void initialize()
 {
 
-  lv_objects();
+
+  lv_obj_t * scr3 = lv_page_create(NULL, NULL);
+  lv_obj_t * label = lv_label_create(scr3, NULL);
+  lv_label_set_text(label, "DO NOT MOVE");
+  lv_obj_set_x(label, 145);
+
+   lv_scr_load(scr3);
+   delay(2400);
+   lv_objects();
 }
 
 /**
